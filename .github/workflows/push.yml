@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: "Checkout source code"
         uses: "actions/checkout@v2"
-      - run: npm install
+        with:
+          ref: ${{ github.ref }}
       - name: "cat package.json"
         run: cat ./package.json
       - name: "Setup Node.js"
@@ -21,17 +22,10 @@ jobs:
         with:
           node-version: 12
       - name: "Automated Version Bump"
-        id: version_bump_and_create_tag
-        run: node action.js
-      - name: "cat package.json"
-        run: cat ./package.json
-
-      - name: Upload release notes
-        if: steps.version_bump_and_create_tag.outputs.TAG
-        uses: Roang-zero1/github-create-release-action@master
+        uses: "phips28/gh-action-bump-version@master"
         with:
-          created_tag: ${{ steps.version_bump_and_create_tag.outputs.TAG }}
-          release_title: ${{ steps.version_bump_and_create_tag.outputs.TAG }}
-          update_existing: true
+          tag-prefix: ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "cat package.json"
+        run: cat ./package.json
