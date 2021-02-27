@@ -1,31 +1,31 @@
-name: "Bump Version"
-
+name: End 2 end tests
 on:
-  push:
-    branches:
-      - "main"
+  pull_request:
+    types: [opened]
+  issue_comment:
+    types: [created]
 
 jobs:
-  bump-version:
-    name: "Bump Version on master"
+  end2end:
+    name: End 2 end execution
     runs-on: ubuntu-latest
-
     steps:
-      - name: "Checkout source code"
-        uses: "actions/checkout@v2"
+      # - uses: chrislennon/action-drone@v1
+      #   with:
+      #     version: '0.8.1'
+      #   env:
+      #     ACTIONS_ALLOW_UNSECURE_COMMANDS: true   
+      - uses: khan/pull-request-comment-trigger@master
+        id: check
         with:
-          ref: ${{ github.ref }}
-      - name: "cat package.json"
-        run: cat ./package.json
-      - name: "Setup Node.js"
-        uses: "actions/setup-node@v1"
-        with:
-          node-version: 12
-      - name: "Automated Version Bump"
-        uses: "phips28/gh-action-bump-version@master"
-        with:
-          tag-prefix: ''
+          trigger: 'qae2e'
+          reaction: rocket
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: "cat package.json"
-        run: cat ./package.json
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      # - run: drone info
+      #   env:
+      #     DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
+      #     DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
+      #   if: steps.check.outputs.triggered == 'true'   
+      - run: 'echo Found it!'
+        if: steps.check.outputs.triggered == 'true'
