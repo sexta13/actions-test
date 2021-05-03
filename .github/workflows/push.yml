@@ -10,11 +10,11 @@ jobs:
     name: End 2 end execution
     runs-on: ubuntu-latest
     steps:
-      # - uses: chrislennon/action-drone@v1
-      #   with:
-      #     version: '0.8.1'
-      #   env:
-      #     ACTIONS_ALLOW_UNSECURE_COMMANDS: true   
+      - uses: chrislennon/action-drone@v1
+        with:
+          version: '0.8.1'
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true   
       - uses: khan/pull-request-comment-trigger@master
         id: check
         with:
@@ -22,10 +22,10 @@ jobs:
           reaction: rocket
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-      # - run: drone info
-      #   env:
-      #     DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
-      #     DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
-      #   if: steps.check.outputs.triggered == 'true'   
+      - run: drone info
+        env:
+          DRONE_SERVER: ${{ secrets.DRONE_SERVER }}
+          DRONE_TOKEN: ${{ secrets.DRONE_TOKEN }}
+        if: steps.check.outputs.triggered == 'true'   
       - run: 'echo Found it!'
         if: steps.check.outputs.triggered == 'true'
